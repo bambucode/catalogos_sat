@@ -6,7 +6,8 @@ class Catalogos
   require 'json'
   require 'net/http'
 
-  # Hash para pasar letras acentuadas y especiales a caracteres estandar.
+  # Codigo para reemplazar caracteres NO ASCII en los encabezados
+  # Ref: https://stackoverflow.com/questions/1268289/how-to-get-rid-of-non-ascii-characters-in-ruby
   REPLACEMENTS = { 
     'á' => "a",
     'é' => 'e',
