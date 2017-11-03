@@ -1,11 +1,12 @@
 
-
+# Clase principal, se instancia con Catalogos.new()
 class Catalogos
   require 'progressbar'
   require 'spreadsheet'
   require 'json'
   require 'net/http'
 
+  # Hash para pasar letras acentuadas y especiales a caracteres estandar.
   REPLACEMENTS = { 
     'á' => "a",
     'é' => 'e',
@@ -19,6 +20,7 @@ class Catalogos
   attr_accessor :local_eTag
 
 
+  # Inicializa la configuracion de encoding y variables de instancia
   def initialize()
     @encoding_options = {
       :invalid   => :replace,     # Replace invalid byte sequences
@@ -35,6 +37,10 @@ class Catalogos
   end
 
 
+  # Descarga el .xls de los catalogos del SAT y lo guarda en el folder temporal del sistema operativo.
+  # Despues de correr este metodo, se asigna la variable @last_eTag en base al archivo descargado.
+  # @param url_excel [String] el url donde el SAT tiene los catalogos, valor default "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls"
+  # @note Generalmente se mandara llamar vacio a menos que el SAT cambie el url en el futuro.
   def descargar(url_excel = "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls")
 
     begin
@@ -72,7 +78,8 @@ class Catalogos
 
   end
   
-
+  # Genera un folder "catalogosJSON" en la ruta temporal del sistema operativo, requiere que ya exista el .xls generado,
+  # usualmente se usa despues de mandar llamar descargar.
   def procesar()
 
     begin
@@ -219,6 +226,11 @@ class Catalogos
 
   end
 
+  # Compara el eTag del .xls en la pagina del SAT con el @last_eTag
+  # @param local_eTag [String] siempre intentara utilizar el @last_eTag a menos que se mande explicitamente un eTag, este se puede
+  # obtener de @last_eTag en una iteracion previa del programa.
+  # @param url_excel [String] el url donde el SAT tiene los catalogos, valor default "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls"
+  # @return [Bool] verdadero si los eTags son distintos, es decir, si hay una nueva version disponible.
   def nuevo_xls?(local_eTag = nil, url_excel = "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls")
     local_eTag = @local_eTag if local_eTag.nil?
     url_excel = URI.parse(url_excel)
@@ -235,6 +247,11 @@ class Catalogos
 
   end
 
+  # Encapsula los demas metodos en una sola rutina
+  # @param local_eTag [String] siempre intentara utilizar el @last_eTag a menos que se mande explicitamente un eTag, este se puede
+  # obtener de @last_eTag en una iteracion previa del programa.
+  # @param url_excel [String] el url donde el SAT tiene los catalogos, valor default "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls"
+  # @return [Bool] verdadero si no hubo ningun error.
   def main(local_eTag = nil, url_excel = "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls")
     
     if (nuevo_xls?(local_eTag, url_excel))

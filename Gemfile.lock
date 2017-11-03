@@ -1,0 +1,17 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    ruby-ole (1.2.12.1)
+    ruby-progressbar (1.9.0)
+    spreadsheet (1.1.4)
+      ruby-ole (>= 1.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  ruby-progressbar
+  spreadsheet
+
+BUNDLED WITH
+   1.15.4
