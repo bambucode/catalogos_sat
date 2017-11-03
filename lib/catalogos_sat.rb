@@ -58,7 +58,7 @@ class Catalogos
         
         tempdir = Dir.tmpdir()
   
-        File.open("#{tempdir}/catalogo.xls", "w") do |f|
+        File.open("#{tempdir}/catalogo.xls", "wb") do |f|
           http.get(url_excel.path) do |str|
             bytesDescargados += str.length 
             relation = 100 * bytesDescargados / totalSize
