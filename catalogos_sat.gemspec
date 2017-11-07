@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
     s.name        = 'catalogos_sat'
-    s.version     = '0.0.2'
-    s.date        = '2017-11-01'
+    s.version     = '0.0.3'
+    s.date        = '2017-11-07'
     s.summary     = "Script para generar JSONS de catalogos del SAT"
     s.description = "Utilerias para generar JSONS de los catalogos del SAT en Mexico. Descarga el archivo .xls que el sat proporciona y parsea las columnas y filas"
     s.authors     = ["BambuCode", "Ricardo Trevizo"]

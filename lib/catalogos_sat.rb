@@ -5,6 +5,7 @@ class Catalogos
   require 'spreadsheet'
   require 'json'
   require 'net/http'
+  require 'fileutils'
 
   # Codigo para reemplazar caracteres NO ASCII en los encabezados
   # Ref: https://stackoverflow.com/questions/1268289/how-to-get-rid-of-non-ascii-characters-in-ruby
@@ -94,9 +95,11 @@ class Catalogos
       raise 'El archivo de catálogos de Excel no existe o no ha sido descargado' if File.exist?(archivo) == false
       
       final_dir = "catalogosJSON"
-      unless File.exist?("#{tempdir}/#{final_dir}")
-        Dir.mkdir("#{tempdir}/#{final_dir}")
+      if File.exist?("#{tempdir}/#{final_dir}")
+        FileUtils.rm_rf("#{tempdir}/#{final_dir}")
       end
+
+      Dir.mkdir("#{tempdir}/#{final_dir}")
   
   
       book = Spreadsheet.open(archivo)
