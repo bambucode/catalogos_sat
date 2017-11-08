@@ -1,7 +1,7 @@
 
 # Clase principal, se instancia con Catalogos.new()
 class Catalogos
-  require 'progressbar'
+  require 'ruby-progressbar'
   require 'spreadsheet'
   require 'json'
   require 'net/http'
