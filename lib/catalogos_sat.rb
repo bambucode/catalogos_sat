@@ -55,7 +55,7 @@ class Catalogos
         response = http.request_head(url_excel.path)
         totalSize = response['content-length'].to_i
         @local_eTag = response['etag'].split(",")[0]
-        pbar = ProgressBar.create(:title => "Progreso:", :format => "%t %B %p%% %E")
+        pbar = ProgressBar.create(:title => "Descargando:", :format => "%t %B %p%% %E")
         
         tempdir = Dir.tmpdir()
   
@@ -107,13 +107,20 @@ class Catalogos
       ultima_parte = false
       encabezados = Array.new
       renglones_json = nil
-  
+
+      total_hojas = book.worksheets.count
+
+      pbar = ProgressBar.create(:title => "Procesando:", :format => "%t %B %p%%")
+      
+        
       # Recorremos todas las hojas/catálogos
-      for i in 0..book.worksheets.count - 1 do
+      for i in 0..book.worksheets.count - 1 
+        relation = (i+1) * 100 / total_hojas
+        pbar.progress = relation
         hoja = book.worksheet i
       
-        puts "\n\n----------------------------------------------"
-        puts "Conviertiendo a JSON hoja #{hoja.name}..."
+        #puts "\n\n----------------------------------------------"
+        #puts "Conviertiendo a JSON hoja #{hoja.name}..."
       
         # Manejamos la lectura de dos hojas separadas en partes, como la de Codigo Postal  
         if hoja.name.index("_Parte_") != nil
@@ -137,7 +144,7 @@ class Catalogos
           
           if row.formats[0].pattern_fg_color == :silver then
             if renglones_json.nil? then
-              puts "Ignorando: #{row}"
+              #puts "Ignorando: #{row}"
               renglones_json = Array.new  
               encabezados = Array.new
             else   
@@ -204,7 +211,7 @@ class Catalogos
       
         # Guardamos el contenido JSON
         if !en_partes || ultima_parte then 
-          puts "Escribiendo archivo JSON..."
+          #puts "Escribiendo archivo JSON..."
           hoja.name.sub!(/(_Parte_\d+)$/, '') if ultima_parte
           File.open("#{tempdir}/#{final_dir}/#{hoja.name}.json","w") do |f|
             f.write(JSON.pretty_generate(renglones_json))
@@ -215,6 +222,8 @@ class Catalogos
           encabezados = Array.new
         end
       end
+      pbar.finish()
+      
   
      
       

@@ -2,7 +2,6 @@ require 'minitest/autorun'
 require 'catalogos_sat'
 
 class CatalogosTest < Minitest::Test
-
   def test_modulos
     myTest = Catalogos.new()
     assert(myTest.descargar)
