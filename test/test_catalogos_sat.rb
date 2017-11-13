@@ -9,10 +9,8 @@ class CatalogosTest < Minitest::Test
     assert(myTest.nuevo_xls? == false)    
     assert(myTest.nuevo_xls?("test"))    
   end
-
   def test_main
     myTest = Catalogos.new()
     assert(myTest.main)
   end
-
 end

@@ -38,6 +38,34 @@ class Catalogos
     @last_eTag = nil
   end
 
+  def is_header?(row)
+
+    #verificando headers por color
+    if row.formats[0].pattern_fg_color == :silver 
+      return true
+    end
+
+    #verificando headers por regex de nombre de hoja
+    title_regex = /^(c|C)_\w+/
+    if title_regex.match(row[0].to_s)
+
+      
+      return true
+    end
+
+    # verificando headers por existencia de version
+    row.each{
+      |cell|
+      if cell == "Versión"
+        
+        return true
+      end
+    }
+
+    return false
+      
+  end
+
 
   # Descarga el .xls de los catalogos del SAT y lo guarda en el folder temporal del sistema operativo.
   # Despues de correr este metodo, se asigna la variable @last_eTag en base al archivo descargado.
@@ -128,7 +156,7 @@ class Catalogos
           ultima_parte = hoja.name.index("_Parte_2") != nil
           #TODO asume que hay como maximo 2 partes por archivo y que el identificador siempre es "_Parte_X"
         end 
-  
+
         # Recorremos todos los renglones de la hoja de Excel
         j = 0
         hoja.each do |row|
@@ -140,9 +168,11 @@ class Catalogos
           next if row.formats[0] == nil 
           # Nos saltamos renglones vacios
           next if row.to_s.index("[nil") != nil
-          next if (row.to_s.index('["Fecha inicio de vigencia", "Fecha fin de vigencia", "Versión", "Revisión"]') != nil) && (ultima_parte == true)
+
           
-          if row.formats[0].pattern_fg_color == :silver then
+          
+
+          if is_header?(row) then
             if renglones_json.nil? then
               #puts "Ignorando: #{row}"
               renglones_json = Array.new  
@@ -176,7 +206,8 @@ class Catalogos
               next
             end    
           end
-        
+
+
           # Solo procedemos si ya hubo encabezados
           if  encabezados.count > 0 then
             #puts encabezados.to_s
@@ -227,7 +258,6 @@ class Catalogos
   
      
       
-      puts "---------------------------------------------------------"
       puts "Se finalizó creacion de JSONs en directorio: #{tempdir}"
 
     rescue => e
