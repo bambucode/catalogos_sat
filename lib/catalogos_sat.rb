@@ -269,6 +269,17 @@ class Catalogos
 
   end
 
+  def nueva_eTag(url_excel = "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls")
+    url_excel = URI.parse(url_excel)
+    new_eTag = nil
+    httpWork = Net::HTTP.start(url_excel.host) do
+      |http|
+      response = http.request_head(url_excel.path)
+      new_eTag = response['etag'].split(",")[0]
+    end
+    return new_eTag
+  end
+
   # Compara el eTag del .xls en la pagina del SAT con el @last_eTag
   # @param local_eTag [String] siempre intentara utilizar el @last_eTag a menos que se mande explicitamente un eTag, este se puede
   # obtener de @last_eTag en una iteracion previa del programa.
@@ -276,15 +287,7 @@ class Catalogos
   # @return [Bool] verdadero si los eTags son distintos, es decir, si hay una nueva version disponible.
   def nuevo_xls?(local_eTag = nil, url_excel = "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls")
     local_eTag = @local_eTag if local_eTag.nil?
-    url_excel = URI.parse(url_excel)
-    new_eTag = nil
-
-    httpWork = Net::HTTP.start(url_excel.host) do
-      |http|
-      response = http.request_head(url_excel.path)
-      new_eTag = response['etag'].split(",")[0]
-    end
-
+    new_eTag = nueva_eTag(url_excel)
 
     return new_eTag != local_eTag
 
