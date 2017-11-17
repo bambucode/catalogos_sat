@@ -220,20 +220,38 @@ class Catalogos
               next if encabezados[k].to_s == ""  
               if row[k].instance_of?(Spreadsheet::Formula) == true
                   valor = row[k].value
-              else                      
-                  if row[k].class == Float 
+              else                              
+                
+                if row[k].class == Float 
+
+
+                  title_regex = /^(c|C)_\w+/
+                  if (title_regex.match(encabezados[k])) or encabezados[k] == 'id'
                     if hoja.name == "c_Impuesto"
-                      #puts "poniendo a tres cero"
-                      valor = "%03d" % row[k].to_i
+                      valor = "%03d" % row[k].to_i                                             
                     else
-                      #puts "poniendo a 2 ceros: " + "%02d" % row[k].to_i
-                      valor = "%02d" % row[k].to_i
+                      valor = "%02d" % row[k].to_i                       
                     end
+                  else
+                    valor = row[k].to_f  
+                    if valor % 1 == 0
+                      valor = "%02d" % valor.to_i
+                    end 
+                    valor = valor.to_s
+                    
+                  end
+
+                else
+
+                  if row[k].class == Date
+                    valor = row[k].strftime("%d-%m-%Y")
                   else
                     valor = row[k].to_s
                   end
+                  
+                end
               end
-          
+
               hash_renglon[encabezados[k]] = valor
             end
             renglones_json << hash_renglon
