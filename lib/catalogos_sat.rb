@@ -292,6 +292,20 @@ class Catalogos
 
   end
 
+
+
+=begin
+  def nueva(url_excel = "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls")
+    url_excel = URI.parse(url_excel)
+    last_modified = nil
+    httpWork = Net::HTTP.start(url_excel.host) do
+      |http|
+      response = http.request_head(url_excel.path)
+      last_modified = response['Last-Modified']
+    end
+    return last_modified
+  end
+
   def nueva_eTag(url_excel = "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls")
     url_excel = URI.parse(url_excel)
     new_eTag = nil
@@ -315,21 +329,19 @@ class Catalogos
     return new_eTag != local_eTag
 
   end
+=end
 
   # Encapsula los demas metodos en una sola rutina
   # @param local_eTag [String] siempre intentara utilizar el @last_eTag a menos que se mande explicitamente un eTag, este se puede
   # obtener de @last_eTag en una iteracion previa del programa.
   # @param url_excel [String] el url donde el SAT tiene los catalogos, valor default "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls"
   # @return [Bool] verdadero si no hubo ningun error.
-  def main(local_eTag = nil, url_excel = "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls")
-    
-    if (nuevo_xls?(local_eTag, url_excel))
-      descargar(url_excel)
-      procesar()
-    end
+  def main(url_excel = "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls")
+
+    descargar(url_excel)
+    procesar()
     
     return true
-    
         
   end
 

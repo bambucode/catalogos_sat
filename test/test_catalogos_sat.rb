@@ -4,7 +4,7 @@ require 'catalogos_sat'
 class CatalogosTest < Minitest::Test
   def test_modulos
     myTest = Catalogos.new()
-    #assert(myTest.descargar)
+    assert(myTest.descargar)
     assert(myTest.procesar)
     #assert(myTest.nuevo_xls? == false)    
     #assert(myTest.nuevo_xls?("test"))
@@ -15,9 +15,9 @@ class CatalogosTest < Minitest::Test
     #assert(myTest.main)
   end
 
-  def test_etag
+  def test_last_modified
     #myTest = Catalogos.new()
-    #myTest.nuevo_xls?
+    #puts myTest.nueva()
   end
 
 end
