@@ -82,7 +82,7 @@ class Catalogos
         |http|
         response = http.request_head(url_excel.path)
         totalSize = response['content-length'].to_i
-        @local_eTag = response['etag'].split(",")[0]
+        @local_eTag = response['etag']
         pbar = ProgressBar.create(:title => "Descargando:", :format => "%t %B %p%% %E")
         
         tempdir = Dir.tmpdir()
@@ -161,8 +161,12 @@ class Catalogos
         j = 0
         hoja.each do |row|
           j += 1
-          # Nos saltamos el primer renglon ya que siempre tiene la descripcion del catálogo, ejem "Catálogo de aduanas ..."
-          next if j == 1
+          # Nos saltamos el primer renglon ya que siempre tiene la descripcion del catálogo, ejem "Catálogo de aduanas ..."  
+          if j == 1
+            unless is_header?(row)
+              next
+            end        
+          end
   
           break if row.to_s.index("Continúa en") != nil
           next if row.formats[0] == nil 
@@ -173,6 +177,7 @@ class Catalogos
           
 
           if is_header?(row) then
+           
             if renglones_json.nil? then
               #puts "Ignorando: #{row}"
               renglones_json = Array.new  
@@ -293,7 +298,7 @@ class Catalogos
     httpWork = Net::HTTP.start(url_excel.host) do
       |http|
       response = http.request_head(url_excel.path)
-      new_eTag = response['etag'].split(",")[0]
+      new_eTag = response['etag']
     end
     return new_eTag
   end
