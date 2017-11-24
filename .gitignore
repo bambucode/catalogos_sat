@@ -6,3 +6,5 @@ catalogos_sat-0\.0\.0\.gem
 \.yardoc/
 
 doc/
+
+\.DS_Store

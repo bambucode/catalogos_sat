@@ -20,7 +20,8 @@ class Catalogos
   }
 
   attr_accessor :local_eTag
-
+  attr_accessor :local_last
+  
 
   # Inicializa la configuracion de encoding y variables de instancia
   def initialize()
