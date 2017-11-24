@@ -36,6 +36,7 @@ class Catalogos
       },
     }
     @last_eTag = nil
+    @local_last = nil
   end
 
   def is_header?(row)
@@ -82,7 +83,7 @@ class Catalogos
         |http|
         response = http.request_head(url_excel.path)
         totalSize = response['content-length'].to_i
-        @local_eTag = response['etag']
+        @local_last = response['Last-Modified']
         pbar = ProgressBar.create(:title => "Descargando:", :format => "%t %B %p%% %E")
         
         tempdir = Dir.tmpdir()
@@ -294,18 +295,33 @@ class Catalogos
 
 
 
-=begin
-  def nueva(url_excel = "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls")
+
+
+  def nueva_last(url_excel = "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls")
     url_excel = URI.parse(url_excel)
-    last_modified = nil
+    new_last = nil
     httpWork = Net::HTTP.start(url_excel.host) do
       |http|
       response = http.request_head(url_excel.path)
-      last_modified = response['Last-Modified']
+      new_last = response['Last-Modified']
     end
-    return last_modified
+    return new_last
   end
 
+  # Compara el eTag del .xls en la pagina del SAT con el @last_eTag
+  # @param local_eTag [String] siempre intentara utilizar el @last_eTag a menos que se mande explicitamente un eTag, este se puede
+  # obtener de @last_eTag en una iteracion previa del programa.
+  # @param url_excel [String] el url donde el SAT tiene los catalogos, valor default "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls"
+  # @return [Bool] verdadero si los eTags son distintos, es decir, si hay una nueva version disponible.
+  def nuevo_xls?(local_last = nil, url_excel = "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls")
+    local_last = @local_last if local_last.nil?
+    new_Last = nueva_last(url_excel)
+
+    return new_Last != local_last
+
+  end
+
+=begin
   def nueva_eTag(url_excel = "http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls")
     url_excel = URI.parse(url_excel)
     new_eTag = nil

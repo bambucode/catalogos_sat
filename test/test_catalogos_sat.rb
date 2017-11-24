@@ -6,18 +6,15 @@ class CatalogosTest < Minitest::Test
     myTest = Catalogos.new()
     assert(myTest.descargar)
     assert(myTest.procesar)
-    #assert(myTest.nuevo_xls? == false)    
-    #assert(myTest.nuevo_xls?("test"))
+    assert(myTest.nuevo_xls? == false)    
+    assert(myTest.nuevo_xls?("test"))
         
   end
   def test_main
-    #myTest = Catalogos.new()
-    #assert(myTest.main)
+    myTest = Catalogos.new()
+    assert(myTest.main)
   end
 
-  def test_last_modified
-    #myTest = Catalogos.new()
-    #puts myTest.nueva()
-  end
+  
 
 end
