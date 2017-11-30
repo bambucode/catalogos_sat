@@ -189,6 +189,17 @@ class Catalogos
               # Si ya tenemos encabezados nos salimos
               next if encabezados.count > 0  
               row.each do |col|
+
+                if hoja.name == "c_UsoCFDI"
+                  col += " fisica" if col == "Aplica para tipo persona"
+                  col = "Aplica para tipo persona moral" if col == nil
+                end
+
+                if hoja.name == "c_TipoDeComprobante"
+                  col += " NS" if col == "Valor máximo"
+                  col = "Valor máximo NdS" if col == nil
+                end
+                
                 # HACK: Para poder poner los valores correspondientes tomando en cuenta los encabezados
                 if hoja.name == "c_TasaOCuota"
                   col = "maximo" if col == nil 
@@ -259,10 +270,43 @@ class Catalogos
                 end
               end
 
+              #hack para poder construir nominas 
+              if hoja.name == "c_TipoDeComprobante"
+                if k == 3 and valor == ""
+                  valor = hash_renglon[encabezados[k-1]]
+                end
+                if k == 2 and valor == "NS"
+                  mycolumns = hoja.column(k)
+                  counter_col = 0
+                  mycolumns.each{
+                    |cell|
+                    if counter_col == j
+                      valor = cell
+                    end
+                    counter_col += 1
+                    
+                  }
+                end
+                if k == 3 and valor == "NdS"
+                  mycolumns = hoja.column(k)
+                  counter_col = 0
+                  mycolumns.each{
+                    |cell|
+                    if counter_col == j
+                      valor = cell
+                    end
+                    counter_col += 1
+                    
+                  }
+                end
+              end
               hash_renglon[encabezados[k]] = valor
             end
             renglones_json << hash_renglon
+            
           end  
+
+          
         end 
       
         # Guardamos el contenido JSON
