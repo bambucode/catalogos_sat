@@ -1,17 +1,19 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    minitest (5.11.3)
     ruby-ole (1.2.12.1)
     ruby-progressbar (1.9.0)
-    spreadsheet (1.1.4)
+    spreadsheet (1.1.7)
       ruby-ole (>= 1.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  minitest
   ruby-progressbar
   spreadsheet
 
 BUNDLED WITH
-   1.15.4
+   1.16.0
