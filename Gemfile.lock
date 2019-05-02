@@ -1,3 +1,10 @@
+PATH
+  remote: .
+  specs:
+    catalogos_sat (0.0.97)
+      ruby-progressbar (~> 1.9)
+      spreadsheet (~> 1.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -11,9 +18,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  catalogos_sat!
   minitest
   ruby-progressbar
   spreadsheet
 
 BUNDLED WITH
-   1.16.0
+   2.0.1
