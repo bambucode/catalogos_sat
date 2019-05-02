@@ -39,7 +39,7 @@ class Catalogos
     }
     @last_eTag = nil
     @local_last = nil
-    @catalogos_url = "http://omawww.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/catCFDI.xls"
+    @catalogos_url = "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/anexo_20_version3-3.htm"
 
   end
 
