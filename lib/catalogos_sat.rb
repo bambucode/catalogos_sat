@@ -77,7 +77,7 @@ class Catalogos
   # Despues de correr este metodo, se asigna la variable @last_eTag en base al archivo descargado.
   # @param url_excel [String] el url donde el SAT tiene los catalogos, valor default "@catalogos_url"
   # @note Generalmente se mandara llamar vacio a menos que el SAT cambie el url en el futuro.
-  def descargar(url_excel = @catalogos_url)
+  def descargar(url_excel = @catalogos_xls_url)
 
     begin
       puts "Descargando archivo de Excel desde el SAT: #{url_excel}"
@@ -354,7 +354,7 @@ class Catalogos
 
 
 
-  def nueva_last(url_excel = @catalogos_url)
+  def nueva_last(url_excel = @catalogos_xls_url)
     url_excel = URI.parse(url_excel)
     new_last = nil
     _httpWork = Net::HTTP.start(url_excel.host) do
@@ -370,7 +370,7 @@ class Catalogos
   # obtener de @last_eTag en una iteracion previa del programa.
   # @param url_excel [String] el url donde el SAT tiene los catalogos, valor default @catalogos_url
   # @return [Bool] verdadero si los eTags son distintos, es decir, si hay una nueva version disponible.
-  def nuevo_xls?(local_last = nil, url_excel = @catalogos_url)
+  def nuevo_xls?(local_last = nil, url_excel = @catalogos_xls_url)
     local_last = @local_last if local_last.nil?
     new_Last = nueva_last(url_excel)
 
@@ -385,7 +385,7 @@ class Catalogos
   # obtener de @last_eTag en una iteracion previa del programa.
   # @param url_excel [String] el url donde el SAT tiene los catalogos, valor default @catalogos_url
   # @return [Bool] verdadero si no hubo ningun error.
-  def main(url_excel = @catalogos_url)
+  def main(url_excel = @catalogos_xls_url)
 
     descargar(url_excel)
     procesar()
