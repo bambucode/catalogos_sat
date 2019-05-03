@@ -39,7 +39,8 @@ class Catalogos
     }
     @last_eTag = nil
     @local_last = nil
-    @catalogos_url = "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/catCFDI.xls"
+    @catalogos_html_url = "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/anexo_20_version3-3.htm"
+    @catalogos_xls_url = "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/catCFDI.xls"
 
   end
 
@@ -83,7 +84,7 @@ class Catalogos
       url_excel = URI.parse(url_excel)
       bytesDescargados = 0      
   
-      httpWork = Net::HTTP.start(url_excel.host) do
+      _httpWork = Net::HTTP.start(url_excel.host) do
         |http|
         response = http.request_head(url_excel.path)
         totalSize = response['content-length'].to_i
@@ -111,6 +112,14 @@ class Catalogos
 
     return true
 
+  end
+
+  def get_url_xls()
+    return @catalogos_xls_url
+  end
+
+  def get_url_html()
+    return @catalogos_html_url
   end
   
   # Genera un folder "catalogosJSON" en la ruta temporal del sistema operativo, requiere que ya exista el .xls generado,
@@ -348,7 +357,7 @@ class Catalogos
   def nueva_last(url_excel = @catalogos_url)
     url_excel = URI.parse(url_excel)
     new_last = nil
-    httpWork = Net::HTTP.start(url_excel.host) do
+    _httpWork = Net::HTTP.start(url_excel.host) do
       |http|
       response = http.request_head(url_excel.path)
       new_last = response['Last-Modified']
@@ -369,31 +378,7 @@ class Catalogos
 
   end
 
-=begin
-  def nueva_eTag(url_excel = @catalogos_url)
-    url_excel = URI.parse(url_excel)
-    new_eTag = nil
-    httpWork = Net::HTTP.start(url_excel.host) do
-      |http|
-      response = http.request_head(url_excel.path)
-      new_eTag = response['etag']
-    end
-    return new_eTag
-  end
 
-  # Compara el eTag del .xls en la pagina del SAT con el @last_eTag
-  # @param local_eTag [String] siempre intentara utilizar el @last_eTag a menos que se mande explicitamente un eTag, este se puede
-  # obtener de @last_eTag en una iteracion previa del programa.
-  # @param url_excel [String] el url donde el SAT tiene los catalogos, valor default @catalogos_url
-  # @return [Bool] verdadero si los eTags son distintos, es decir, si hay una nueva version disponible.
-  def nuevo_xls?(local_eTag = nil, url_excel = @catalogos_url)
-    local_eTag = @local_eTag if local_eTag.nil?
-    new_eTag = nueva_eTag(url_excel)
-
-    return new_eTag != local_eTag
-
-  end
-=end
 
   # Encapsula los demas metodos en una sola rutina
   # @param local_eTag [String] siempre intentara utilizar el @last_eTag a menos que se mande explicitamente un eTag, este se puede
